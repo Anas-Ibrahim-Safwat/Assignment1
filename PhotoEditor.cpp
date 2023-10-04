@@ -37,7 +37,27 @@ void saveImage()
 
 void blackAndWhite()
 {
+    int average = 0;
+    for (int i = 0; i < SIZE; i++) 
+    {
+        for (int j = 0; j < SIZE; j++) 
+        {
+            average += image[i][j];
+        }
+    }
 
+    average /= (SIZE*SIZE);
+
+    for (int i = 0; i < SIZE; i++) 
+    {
+        for (int j = 0; j < SIZE; j++) 
+        {
+            if (image[i][j] > average)
+                image[i][j] = 255;
+            else 
+                image[i][j] = 0;
+        }
+    }
 }
 
 
@@ -112,7 +132,7 @@ int main()
 
         if (filterNum == '1')
         {
-
+            blackAndWhite();
         } 
 
         else if (filterNum == '2')
@@ -152,7 +172,3 @@ int main()
         saveImage();
     }
 }
-
-
-
-
