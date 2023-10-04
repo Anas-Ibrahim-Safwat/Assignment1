@@ -37,8 +37,14 @@ void blackAndWhite(){
 
 }
 
-void invertImage(){
+void invertImage()
+{
+    for (int i = 0; i < SIZE; i++)
+    {
+        for (int j = 0; j < SIZE; j++)
+                image[i][j] = 255 - image[i][j];
 
+    }
 }
 
 void mergeImages(){
@@ -72,21 +78,27 @@ int main(){
     char filterNum;
     while(cin >> filterNum) {
 
-        if (filterNum == 1) {
+        if (filterNum == '1') {
 
-        } else if (filterNum == 2) {
+        } else if (filterNum == '2') {
+            invertImage();
+        } else if (filterNum == '3') {
 
-        } else if (filterNum == 3) {
+        } else if (filterNum == '4') {
 
-        } else if (filterNum == 4) {
+        } else if (filterNum == '5') {
 
-        } else if (filterNum == 5) {
-
-        } else if (filterNum == 6) {
+        } else if (filterNum == '6') {
 
         } else {
 
             return 0;
         }
+
+        saveImage();
     }
 }
+
+
+
+
