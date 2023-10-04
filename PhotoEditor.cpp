@@ -70,35 +70,23 @@ int main(){
     cout << "0- Exit" << endl;
 
     char filterNum;
-    cin >> filterNum;
+    while(cin >> filterNum) {
 
-    if(filterNum == 1){
+        if (filterNum == 1) {
 
+        } else if (filterNum == 2) {
+
+        } else if (filterNum == 3) {
+
+        } else if (filterNum == 4) {
+
+        } else if (filterNum == 5) {
+
+        } else if (filterNum == 6) {
+
+        } else {
+
+            return 0;
+        }
     }
-
-    else if(filterNum == 2){
-
-    }
-
-    else if(filterNum == 3){
-
-    }
-
-    else if(filterNum == 4){
-
-    }
-
-    else if(filterNum == 5){
-
-    }
-
-    else if(filterNum == 6){
-
-    }
-
-    else{
-
-        return 0;
-    }
-    return 0;
 }
