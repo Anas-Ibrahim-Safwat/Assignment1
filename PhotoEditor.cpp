@@ -16,7 +16,7 @@ unsigned char image[SIZE][SIZE];
 
 void loadImage(){
     char imageFileName[100];
-    cout << "Enter the source image file name: " << endl;
+    cout << "Enter the source image file name to load: " << endl;
     cin >> imageFileName;
 
     strcat(imageFileName, ".bmp");
@@ -27,7 +27,7 @@ void loadImage(){
 void saveImage()
 {
     char imageFileName[100];
-    cout << "Enter the target image file name: " << endl;
+    cout << "Enter the target image file name to save: " << endl;
     cin >> imageFileName;
 
     strcat (imageFileName, ".bmp");
