@@ -73,15 +73,42 @@ void invertImage()
 
 void mergeImages()
 {
+unsigned char mergeImage[SIZE][SIZE];
+    char mergeImageFileName[100];
+    cout << "Enter the image file name you want to merge this image with: " << endl;
+    cin >> mergeImageFileName;
+    strcat (mergeImageFileName, ".bmp");
+    readGSBMP(mergeImageFileName, mergeImage);
 
+    for (int i = 0; i < SIZE ; ++i) {
+        for (int j = 0; j < SIZE ; ++j) {
+            image[i][j] = (image[i][j] + mergeImage[i][j]) / 2;
+        }
+    }
 }
 
 
-void flipImage()
+void flipImage(int n) 
 {
-
+    if (n == 1){
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE / 2; j++) {
+                int num = image[i][j];
+                image[i][j] = image[i][SIZE - j];
+                image[i][SIZE - j] = num;
+            }
+        }
+    }
+    else{
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE/2 ; j++) {
+                int num = image[j][i];
+                image[j][i] = image[SIZE-j][i];
+                image[SIZE-j][i] = num;
+            }
+        }
+    }
 }
-
 
 void rotateImage(int angle)
 {
@@ -109,7 +136,32 @@ void rotateImage(int angle)
 
 void darkenAndLighten()
 {
+   cout << "If you want to make the photo lighter enter 1" << endl;
+    cout << "If you want to make the photo darker enter 2" << endl;
+    int type;
+    cin >> type;
 
+    for (int i = 0; i < SIZE ; ++i) {
+        for (int j = 0; j < SIZE ; ++j) {
+            if(type == 1){
+                if((image[i][j] + (image[i][j]) / 2) > 255){
+                    image[i][j] = 255;
+                }
+                else{
+                    image[i][j] += (image[i][j]) / 2;
+                }
+            }
+            else{
+                if(image[i][j] - ((image[i][j]) / 2) < 0){
+                    image[i][j] = 0;
+                }
+                else{
+                    image[i][j] -= (image[i][j]) / 2;
+                }
+            }
+        }
+
+    }
 }
 
 
