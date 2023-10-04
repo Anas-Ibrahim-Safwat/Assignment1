@@ -77,6 +77,12 @@ void rotateImage(int angle)
             }
         }
         angle--;
+
+        for (int i = 0; i < SIZE; i++)
+            {
+                for (int j = 0; j < SIZE; j++)
+                    image[i][j] = image_r[i][j];
+            }
     }
 
     for (int i = 0; i < SIZE; i++)
