@@ -34,6 +34,7 @@ void saveImage()
     writeGSBMP(imageFileName, image);
 }
 
+//----------------------------------------------------------------------------
 
 void blackAndWhite()
 {
@@ -73,15 +74,19 @@ void invertImage()
 
 void mergeImages()
 {
-unsigned char mergeImage[SIZE][SIZE];
+    unsigned char mergeImage[SIZE][SIZE];
     char mergeImageFileName[100];
+
     cout << "Enter the image file name you want to merge this image with: " << endl;
     cin >> mergeImageFileName;
+
     strcat (mergeImageFileName, ".bmp");
     readGSBMP(mergeImageFileName, mergeImage);
 
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE ; ++j) {
+    for (int i = 0; i < SIZE ; ++i)
+    {
+        for (int j = 0; j < SIZE ; ++j) 
+        {
             image[i][j] = (image[i][j] + mergeImage[i][j]) / 2;
         }
     }
@@ -90,18 +95,24 @@ unsigned char mergeImage[SIZE][SIZE];
 
 void flipImage(int n) 
 {
-    if (n == 1){
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE / 2; j++) {
+    if (n == 1)
+    {
+        for (int i = 0; i < SIZE; i++) 
+        {
+            for (int j = 0; j < SIZE / 2; j++) 
+            {
                 int num = image[i][j];
                 image[i][j] = image[i][SIZE - j];
                 image[i][SIZE - j] = num;
             }
         }
     }
-    else{
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE/2 ; j++) {
+    else
+    {
+        for (int i = 0; i < SIZE; i++) 
+        {
+            for (int j = 0; j < SIZE/2 ; j++) 
+            {
                 int num = image[j][i];
                 image[j][i] = image[SIZE-j][i];
                 image[SIZE-j][i] = num;
@@ -136,34 +147,35 @@ void rotateImage(int angle)
 
 void darkenAndLighten()
 {
-   cout << "If you want to make the photo lighter enter 1" << endl;
-    cout << "If you want to make the photo darker enter 2" << endl;
+    cout << "1- Lighten\n2- Darken\n" << endl;
+
     int type;
     cin >> type;
 
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE ; ++j) {
-            if(type == 1){
-                if((image[i][j] + (image[i][j]) / 2) > 255){
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j < SIZE ; ++j) 
+        {
+            if(type == 1)
+            {
+                if((image[i][j] + (image[i][j]) / 2) > 255)
                     image[i][j] = 255;
-                }
-                else{
+                else
                     image[i][j] += (image[i][j]) / 2;
-                }
             }
-            else{
-                if(image[i][j] - ((image[i][j]) / 2) < 0){
+            else
+            {
+                if(image[i][j] - ((image[i][j]) / 2) < 0)
                     image[i][j] = 0;
-                }
-                else{
+                else
                     image[i][j] -= (image[i][j]) / 2;
-                }
             }
         }
 
     }
 }
 
+//----------------------------------------------------------------------
 
 int main()
 {
@@ -194,12 +206,19 @@ int main()
 
         else if (filterNum == '3')
         {
-
+            mergeImages();
         } 
 
         else if (filterNum == '4')
         {
+            int n = 0;
 
+            cout << "choose axis: \n";
+            cout << "1- horizontal\n2- vertical\n";
+
+            cin >> n;
+
+            flipImage(n);
         } 
 
         else if (filterNum == '5')
@@ -215,7 +234,7 @@ int main()
 
         else if (filterNum == '6')
         {
-
+            darkenAndLighten();
         } 
 
         else
