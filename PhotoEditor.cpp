@@ -131,7 +131,7 @@ void rotateImage(int angle)
         for (int i = 0; i < SIZE; i++)               // files a new 2d array (image) with the ol one but
         {                                            // by switching rows and colummns ( or "i" and "j")
             for (int j = SIZE - 1; j >= 0; j--)      // to achieve rotation and starts the columns 
-            {                                        // from left to right ([SIZE - j]) to get clockwise rotation
+            {                                        // from right to left ([SIZE - j]) to get clockwise rotation
                 image_r[i][j] = image[SIZE - j][i];  // One loop rotates 90 degrees clockwise
             }
         }
