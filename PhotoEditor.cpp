@@ -189,6 +189,7 @@ int main()
     loadImage();
 
     showmenu();
+    cout << "Your choice is: ";
 
     char filterNum;
 
@@ -251,6 +252,8 @@ int main()
         }
         else if (filterNum == '0')
         {
+            cout << "App closed" << endl;
+            cout << "Thank you" << endl;
             return 0;
         }
         else
@@ -260,5 +263,7 @@ int main()
         }
 
         showmenu();
+
+        cout << "Your choice is: ";
     }
 }
