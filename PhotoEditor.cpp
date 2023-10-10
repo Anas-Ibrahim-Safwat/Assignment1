@@ -2,7 +2,7 @@
 // Program Name: PhotoEditor.cpp
 // Author1 and ID and Email:  Philopateer Karam -- 20220246 -- philokrm@gmail.com
 // Author2 and ID and Email:  Mahmoud Khaled -- 20220317 -- mahmoudkhaled3177@gmail.com
-// Author3 and ID and Email:  Anas Ibrahim -- 20220068 -- ????????
+// Author3 and ID and Email:  Anas Ibrahim -- 20220068 -- anashima799@gmail.com
 
 #include <iostream>
 #include <fstream>
@@ -74,18 +74,17 @@ void invertImage()
 
 void mergeImages()
 {
-    unsigned char mergeImage[SIZE][SIZE];
+    unsigned char mergeImage[SIZE][SIZE];    //first i took the image that the user want to merge with
     char mergeImageFileName[100];
-
     cout << "Enter the image file name you want to merge this image with: " << endl;
     cin >> mergeImageFileName;
 
     strcat (mergeImageFileName, ".bmp");
     readGSBMP(mergeImageFileName, mergeImage);
 
-    for (int i = 0; i < SIZE ; ++i)
+    for (int i = 0; i < SIZE ; ++i)      //then i looped on the 2D array and assign every pixel 
+        for (int j = 0; j < SIZE ; ++j)  //to the average between the original image and the one i want to merge with
     {
-        for (int j = 0; j < SIZE ; ++j) 
         {
             image[i][j] = (image[i][j] + mergeImage[i][j]) / 2;
         }
@@ -148,19 +147,19 @@ void rotateImage(int angle)
 
 void darkenAndLighten()
 {
-    cout << "1- Lighten\n2- Darken\n" << endl;
+    cout << "1- Lighten\n2- Darken\n" << endl; // first i asked the user what he wants to do, lighten or darken
 
     int type;
-    cin >> type;
+    cin >> type;                              // if he chooses to light the image he will enter 1 , else he will enter 2
 
     for (int i = 0; i < SIZE ; ++i) 
     {
         for (int j = 0; j < SIZE ; ++j) 
         {
-            if(type == 1)
-                image[i][j] += (256 - image[i][j])/2;
+            if(type == 1)                              
+                image[i][j] += (256 - image[i][j])/2;    // if he chooses to light it, i'll light the pixel by 50% by this equation: image[i][j] += (256 - image[i][j])/2
             else
-                image[i][j] -= (image[i][j]/2);
+                image[i][j] -= (image[i][j]/2);          // And if he chooses 2, i will just minus 50% of the pixel amount by this equation: image[i][j] -= image[i][j] / 2
         }
 
     }
