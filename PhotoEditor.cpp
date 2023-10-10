@@ -38,26 +38,26 @@ void saveImage()
 
 void blackAndWhite()
 {
-    int average = 0;
-    for (int i = 0; i < SIZE; i++) 
+    int sum = 0;
+    for (int i = 0; i < SIZE; i++)        // Nested loop to calculate the sum of the value of each pixel 
     {
         for (int j = 0; j < SIZE; j++) 
         {
-            average += image[i][j];
+            sum += image[i][j];
         }
     }
 
-    average /= (SIZE*SIZE);
+    int average = sum / (SIZE*SIZE);     //calculate the average
 
     for (int i = 0; i < SIZE; i++) 
     {
         for (int j = 0; j < SIZE; j++) 
         {
-            if (image[i][j] > average)
+            if (image[i][j] > average)  //If the value of the pixels is greater than the average, we will replace its value to 255 (white)
                 image[i][j] = 255;
             else 
-                image[i][j] = 0;
-        }
+                image[i][j] = 0;       //If the value of the pixels is less than the average, we will replace its value to 0 (black)
+        } 
     }
 }
 
@@ -95,28 +95,28 @@ void mergeImages()
 
 void flipImage(int n) 
 {
-    if (n == 1)
+    if (n == 1)  //horizontal
     {
         for (int i = 0; i < SIZE; i++) 
         {
             for (int j = 0; j < SIZE / 2; j++) 
             {
-                int num = image[i][j];
-                image[i][j] = image[i][SIZE - j];
-                image[i][SIZE - j] = num;
+                int num = image[i][j];             //In each row we change the value of the first pixel with the last pixel
+                image[i][j] = image[i][SIZE - j]; //and then the value of the second pixel with the penultimate pixel and so on
+                image[i][SIZE - j] = num;        //until we reach the middle of the row
             }
         }
     }
 
-    else
+    else     //vertical
     {
         for (int i = 0; i < SIZE; i++) 
         {
             for (int j = 0; j < SIZE/2 ; j++) 
             {
-                int num = image[j][i];
-                image[j][i] = image[SIZE-j][i];
-                image[SIZE-j][i] = num;
+                int num = image[j][i];            //In each column we change the value of the first pixel with the last pixel
+                image[j][i] = image[SIZE-j][i];  //and then the value of the second pixel with the penultimate pixel and so on
+                image[SIZE-j][i] = num;         //until we reach the middle of the column
             }
         }
     }
