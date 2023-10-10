@@ -249,6 +249,10 @@ int main()
         {
             saveImage();
         }
+        else if (filterNum == '0')
+        {
+            return 0;
+        }
         else
         {
             cout << "Invaled choice" << endl;
