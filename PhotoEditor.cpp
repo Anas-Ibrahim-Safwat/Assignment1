@@ -1,8 +1,8 @@
 // FCAI – OOP Programming – 2023 - Assignment 1
 // Program Name: PhotoEditor.cpp
-// Author1 and ID:  Philopateer Karam -- 20220246
-// Author2 and ID:  Mahmoud Khaled -- 20220317
-// Author3 and ID:  Anas Ibrahim -- 20220068
+// Author1 and ID and email:  Philopateer Karam -- 20220246  -- philokrm@gmail.com
+// Author2 and ID and email:  Mahmoud Khaled -- 20220317  -- 
+// Author3 and ID and email:  Anas Ibrahim -- 20220068  -- 
 
 #include <iostream>
 #include <fstream>
@@ -31,7 +31,7 @@ int main()
     loadImage();
 
     while (true){
-
+    // the menu
     cout << "Please choose your option from the following: "<< endl;
     cout << "1- Black & White Filter" << endl;
     cout << "2- Invert Filter" << endl;
@@ -67,8 +67,10 @@ int main()
 
         else if (filterNum == '4')
         {
-            cout<<"Do you want flip Image:\n 1-horizontally\n2-vertically\n";
+            cout << "If you want to flip the photo horizontally enter 1" << endl;
+            cout << "If you want to flip the photo vertically  enter 2" << endl;
             int n;
+            cin>>n;
             flipImage(n);
             cout<<"It's done\n";
         } 
@@ -140,25 +142,26 @@ void saveImage()
 
 void blackAndWhite()
 {
-    int average = 0;
-    for (int i = 0; i < SIZE; i++) 
+    int sum = 0;
+    for (int i = 0; i < SIZE; i++)   // Nested loop to calculate the sum of the value of each pixel 
+
     {
         for (int j = 0; j < SIZE; j++) 
         {
-            average += image[i][j];
+            sum += image[i][j];
         }
     }
 
-    average /= (SIZE*SIZE);
+    int average = sum / (SIZE*SIZE);  //calculate the average
 
     for (int i = 0; i < SIZE; i++) 
     {
         for (int j = 0; j < SIZE; j++) 
         {
-            if (image[i][j] > average)
+            if (image[i][j] > average)    //If the value of the pixels is greater than the average, we will replace its value to 255 (white)
                 image[i][j] = 255;
             else 
-                image[i][j] = 0;
+                image[i][j] = 0;          //If the value of the pixels is less than the average, we will replace its value to 0 (black)
         }
     }
 }
@@ -196,7 +199,10 @@ void flipImage(int n)
 {
     if (n == 1){  //horizontally 
         for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE / 2; j++) {
+            for (int j = 0; j < SIZE / 2; j++) { 
+                /*In each row we change the value of the first pixel with the last pixel
+                and then the value of the second pixel with the penultimate pixel and so on
+                until we reach the middle of the row*/ 
                 int num = image[i][j];
                 image[i][j] = image[i][SIZE - j];
                 image[i][SIZE - j] = num;
@@ -206,6 +212,9 @@ void flipImage(int n)
     else{ //vertically 
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE/2 ; j++) {
+                /*In each column we change the value of the first pixel with the last pixel
+                and then the value of the second pixel with the penultimate pixel and so on
+                until we reach the middle of the column*/ 
                 int num = image[j][i];
                 image[j][i] = image[SIZE-j][i];
                 image[SIZE-j][i] = num;
