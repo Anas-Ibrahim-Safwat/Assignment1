@@ -242,6 +242,59 @@ void mirror(int n){
 
 
 
+void shrinkImage(){
+    //First I make temp white image to shrink the original one in it
+    unsigned char image2[SIZE][SIZE];    
+    for (int i = 0; i <SIZE ; ++i) {
+        for (int j = 0; j <SIZE ; ++j) {
+            image2[i][j] = 255;
+        }
+    }
+    //I ask the user to choose the dimension he wants to shrink the original image in
+    cout << "You want to shrink the image dimensions to: " << endl;  
+    cout << "1- Half" << endl;
+    cout << "2- One third" << endl;
+    cout << "3- a Fourth" << endl;
+    int shrinkType;
+    cin >> shrinkType;
+    if(shrinkType == 1){
+        // if he chooses 1 I will shrink the image dimensions to half 
+        // by saving every 2 pixels in the original one in only 1 pixel in the temp image
+        for (int i = 0; i < SIZE  ; ++i) {
+            for (int j = 0; j < SIZE; ++j) {
+                image2[i/2][j/2] = image[i][j];
+            }
+        }
+    }
+        
+    else if(shrinkType == 2){
+        // if he chooses 2 I will shrink the image dimensions to one third 
+        // by saving every 3 pixels in the original one in only 1 pixel in the temp image
+        for (int i = 0; i < SIZE  ; ++i) {
+            for (int j = 0; j < SIZE; ++j) {
+                image2[i/3][j/3] = image[i][j];
+            }
+        }
+    }
+    else{
+        // if he chooses 3 I will shrink the image dimensions to a fourth 
+        // by saving every 4 pixels in the original one in only 1 pixel in the temp image
+        for (int i = 0; i < SIZE  ; ++i) {
+            for (int j = 0; j < SIZE; ++j) {
+                image2[i/4][j/4] = image[i][j];
+            }
+        }
+    }
+    
+    // finally I make the original image equal to the shrinked one to print it
+    for (int i = 0; i < SIZE ; ++i) {
+        for (int j = 0; j <SIZE ; ++j) {
+            image[i][j] = image2[i][j];
+        }
+    }
+}
+
+
 
 
 
@@ -258,6 +311,121 @@ void crop(int x,int y , int length,int width){
         }}
 
 }
+
+
+
+void blur(){
+    // first I made a temp image to assign the blured pixels in
+    unsigned char image2[SIZE][SIZE];
+
+    // The idea of blur is to make every pixel in the image equal to the average of all the pixels around it
+    // But, we will face a problem, which is dealing with the pixels on the edges
+    // So I made a directional array , one for the index of the row of the pixel I will check that is it in the range or not
+    // and the other one for the index of the column of the same pixel
+    int dx[] = {-1,-1,-1,0,0,0,1,1,1};
+    int dy[] = {-1,0,1,-1,0,1,-1,0,1};
+    for (int i = 0; i < SIZE ; ++i) {
+        for (int j = 0; j < SIZE ; ++j) {
+            // Now I made 2 variables, one for the total values of the pixels around the one i want to blur
+            // and the other one will count how many pixels I will take ( in the range of the image )
+            int tot = 0  , count = 0;
+            for (int k = 0; k < 9 ; ++k) {
+                // Now I looped on the 8 pixels around the pixel i want to blur
+                int nx = i + dx[k];
+                int ny = j + dy[k];
+                if(ny >= 0 && ny < SIZE && nx >= 0 && nx < SIZE){
+                    //then checked if that pixel, which is around the pixel I want to blur, is in the range or not
+                    // if the pixel in range of the image I will add its value in the (tot) variable
+                    // and I will count it as a valid pixel (count++)
+                    tot += image[nx][ny];
+                    count++;
+                }
+            }
+            //after that I will get the average of every valid pixel 
+            // by dividing those value on the amount of them
+            image2[i][j] = tot / count;
+        }
+    }
+    
+    // finally i will make the image I want to print = the blured image
+    for (int i = 0; i < SIZE ; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            image[i][j] = image2[i][j];
+        }
+    }
+    // I noticed that the degree of blur is not as same as the one on the sample PDF for filters
+}
+
+
+void blurImage(){
+    // so I repeated the function 6 times to approach the same blur as the PDF filter
+    blur();
+    blur();
+    blur();
+    blur();
+    blur();
+    blur();
+}
+
+
+
+
+
+void skewImageHorizontally(){
+    // first I made 2 white temp images
+    // one I will shrink the original image in
+    // the other one I will skew the shrank image in
+    unsigned char image2[SIZE][SIZE];
+    unsigned char image3[SIZE][SIZE];
+    for (int i = 0; i < SIZE ; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            image2[i][j] = 255;
+            image3[i][j] = 255;
+        }
+    }
+
+    // now I will take the angle from the user
+    double angle;
+    cin >> angle;
+    angle = 90 - angle;  // I did that because you want the angle that is complementary to the angle I am dealing with
+    angle = (angle * 22) / (180 * 7);
+    
+    int x = (int)(SIZE / ( 1 + 1/tan(angle))); // this equation is the base I will shrink the original image in
+    
+    double step = SIZE - x; // this is the starting position to put the pixels in the skewed image
+    double move = step/ SIZE; // this is the move I will take back to make the image skewed
+    
+    for (int i = 0; i < SIZE ; ++i) {
+        for (int j = 0; j < SIZE ; ++j) {
+            // now I shrank the original image in ( x / SIZE ) of the columns 
+            image2[i][(j*x)/SIZE] = image[i][j];
+        }
+    }
+
+    for (int i = 0; i <SIZE ; ++i) {
+        for (int j = (int)step; j < step+x ; ++j) {
+            // Now, I will start sorting the index from the starting position till complete the same size of shrank base
+            //Every row I start copying the pixels from the shrank image, I want to make sure that I'm taking pixels
+            // from the first column
+            
+            image3[i][j] = image2[i][(int)(j-step)];// ----> So i do (j - step)
+        }
+        
+        // after that I start the new row of pixels from the new column, which will be 
+        // starting position - the move i will take back
+        
+        step -= move;
+    }
+    //finally I make the original image equal to the skewed one to print it
+    for (int i = 0; i < SIZE; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            image[i][j] = image3[i][j];
+        }
+    }
+}
+
+
+
 
 
 void showmenu()
