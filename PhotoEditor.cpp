@@ -516,7 +516,7 @@ int main()
 
         }
         else if (filterNum == '9'){
-            
+            shrinkImage();
         }
         else if (filterNum == 'a'){
             cout << "Please select a mirror side: \n";
@@ -529,7 +529,7 @@ int main()
             
         }
         else if (filterNum == 'c'){
-            
+            blurImage();
         }
         else if (filterNum == 'd'){
             cout << "please enter  x ,y ,length ,width :  ";
@@ -538,7 +538,7 @@ int main()
             crop( x , y , length , width ) ;
         }
         else if (filterNum == 'e'){
-            
+            skewImageHorizontally();
         }
         else if (filterNum == 'f'){
             
