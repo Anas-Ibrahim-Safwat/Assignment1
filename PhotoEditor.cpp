@@ -165,6 +165,101 @@ void darkenAndLighten()
     }
 }
 
+void detect(){
+    unsigned char image_bw[SIZE][SIZE];    // Convert image to black and white to make it easier to find the edges
+    int average = 0;
+    for (int i = 0; i < SIZE; i++) 
+    {
+        for (int j = 0; j < SIZE; j++) 
+        {
+            average += image[i][j];
+        }
+    }
+ 
+    average /= (SIZE*SIZE);
+
+    for (int i = 0; i < SIZE; i++) 
+    {
+        for (int j = 0; j < SIZE; j++) 
+        {
+            if (image[i][j] > average)
+                image_bw[i][j] = 255;
+            else 
+                image_bw[i][j] = 0;
+        }
+    }
+
+       for (int i = 1; i < SIZE-1 ; ++i) {
+        for (int j = 1; j < SIZE-1 ; ++j) {
+           if(image_bw[i-1][j] != image_bw[i+1][j] || image_bw[i][j-1] != image_bw[i+1][j+1]  ){
+           image[i][j]=image_bw[i][j];        // To find the edge, we stop at each pixel and compare the pixel after it and the pixel before it,
+           }                                  // then compare the pixel above it and the pixel below it.
+           else{                              //  If the values are different, then the pixel is this edge, and if not, we make it white
+            image[i][j] = 255; 
+           }
+        }}
+}
+
+
+
+
+
+
+
+
+void mirror(int n){
+    if(n==1){  //left
+     for (int i = 0; i < SIZE ; ++i) {
+        for (int j = 0; j < SIZE/2 ; ++j) {
+            image[i][SIZE-j]=image[i][j];
+        }}
+
+    }
+    else if(n==2){//right
+        for (int i = 0; i < SIZE ; ++i) {
+        for (int j = 128; j < SIZE ; ++j) {
+            image[i][SIZE-j]=image[i][j];
+        }}
+
+    }
+    else if(n==3){//upper
+        for (int i = 0; i < SIZE/2 ; ++i) {
+        for (int j = 0; j < SIZE ; ++j) {
+            image[SIZE-i][j]=image[i][j];
+        }}
+
+    }
+    else if(n==4){//down
+        for (int i = 128; i < SIZE ; ++i) {
+        for (int j = 0; j < SIZE ; ++j) {
+            image[SIZE-i][j]=image[i][j];
+        }}
+
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+void crop(int x,int y , int length,int width){
+    for (int i = 0; i < SIZE ; ++i) {
+        for (int j = 0; j < SIZE ; ++j) {
+            if (i < x || i > x+length || j < y || j > y+width ){
+                image[i][j]=255;
+
+            }
+        }}
+
+}
+
+
 void showmenu()
 {
     cout << "Please select a filter to apply or 0 to exit: "<< endl;
@@ -174,6 +269,15 @@ void showmenu()
     cout << "4- Flip Image" << endl;
     cout << "5- Rotate Image" << endl;
     cout << "6- Darken And Lighten Image" << endl;
+    cout << "7- Detect Image Edges" << endl;
+    cout << "8- Enlarge Image" << endl;
+    cout << "9- Shrink Image" << endl;
+    cout << "a- Mirror 1/2 Image" << endl;
+    cout << "b- Shuffle Image" << endl;
+    cout << "c- Blur Image" << endl;
+    cout << "d- Crop Image" << endl;
+    cout << "e- Skew Image Right" << endl;
+    cout << "f- Skew Image Up" << endl;
     cout << "l- Load new image" << endl;
     cout << "s- Save image" << endl;
     cout << "0- Exit" << endl;
@@ -228,7 +332,6 @@ int main()
 
             cout << "Please select an angle to rotate: ";
             cout << "\n\n1- 90\n2- 180\n3- 270\n";
-            
             cin >> angle;
             rotateImage(angle);
         } 
@@ -238,6 +341,41 @@ int main()
             darkenAndLighten();
         } 
 
+        else if (filterNum =='7'){
+            detect();
+        }
+        else if (filterNum == '8'){
+
+        }
+        else if (filterNum == '9'){
+            
+        }
+        else if (filterNum == 'a'){
+            cout << "Please select a mirror side: \n";
+            cout << "\n1- left\n2- right\n3- upper\n4- down\n";
+            int n;
+            cin>>n;
+            mirror(n);
+        }
+        else if (filterNum == 'b'){
+            
+        }
+        else if (filterNum == 'c'){
+            
+        }
+        else if (filterNum == 'd'){
+            cout << "please enter  x ,y ,length ,width :  ";
+            int x,y,length,width;
+            cin >> x >> y >> length >> width;
+            crop( x , y , length , width ) ;
+        }
+        else if (filterNum == 'e'){
+            
+        }
+        else if (filterNum == 'f'){
+            
+        }
+       
         else if (filterNum == 'l')
         {
             loadImage();
