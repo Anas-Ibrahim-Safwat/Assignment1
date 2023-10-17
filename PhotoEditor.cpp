@@ -76,6 +76,7 @@ void mergeImages()
 {
     unsigned char mergeImage[SIZE][SIZE];    //first i took the image that the user want to merge with
     char mergeImageFileName[100];
+    
     cout << "Enter the image file name you want to merge this image with: " << endl;
     cin >> mergeImageFileName;
 
@@ -83,12 +84,13 @@ void mergeImages()
     readGSBMP(mergeImageFileName, mergeImage);
 
     for (int i = 0; i < SIZE ; ++i)      //then i looped on the 2D array and assign every pixel 
-        for (int j = 0; j < SIZE ; ++j)  //to the average between the original image and the one i want to merge with
     {
+        for (int j = 0; j < SIZE ; ++j)  //to the average between the original image and the one i want to merge with
         {
             image[i][j] = (image[i][j] + mergeImage[i][j]) / 2;
         }
     }
+
 }
 
 
@@ -165,9 +167,11 @@ void darkenAndLighten()
     }
 }
 
-void detect(){
+void detect()
+{
     unsigned char image_bw[SIZE][SIZE];    // Convert image to black and white to make it easier to find the edges
     int average = 0;
+
     for (int i = 0; i < SIZE; i++) 
     {
         for (int j = 0; j < SIZE; j++) 
@@ -189,106 +193,266 @@ void detect(){
         }
     }
 
-       for (int i = 1; i < SIZE-1 ; ++i) {
-        for (int j = 1; j < SIZE-1 ; ++j) {
-           if(image_bw[i-1][j] != image_bw[i+1][j] || image_bw[i][j-1] != image_bw[i+1][j+1]  ){
-           image[i][j]=image_bw[i][j];        // To find the edge, we stop at each pixel and compare the pixel after it and the pixel before it,
-           }                                  // then compare the pixel above it and the pixel below it.
-           else{                              //  If the values are different, then the pixel is this edge, and if not, we make it white
-            image[i][j] = 255; 
-           }
-        }}
+        for (int i = 1; i < SIZE-1 ; ++i) 
+        {
+            for (int j = 1; j < SIZE-1 ; ++j) 
+            {
+                if(image_bw[i-1][j] != image_bw[i+1][j] || image_bw[i][j-1] != image_bw[i+1][j+1] )
+                    image[i][j]=image_bw[i][j];        // To find the edge, we stop at each pixel and compare the pixel after it and the pixel before it,
+                else                                  // then compare the pixel above it and the pixel below it.
+                    image[i][j] = 255;               //  If the values are different, then the pixel is this edge, and if not, we make it white
+            }
+        }
+}
+
+void enlargeimage(int n)
+{
+    unsigned char bigimage[SIZE][SIZE];
+    unsigned char bigimage2[SIZE][SIZE];
+
+    int x = 1;
+
+    if(n == 2)
+    {
+        for (int i = 0; i < 128; i++)
+        {
+            for (int j = 0; j < 128; j++)
+            {
+                image[i][j] = image[i][j+128];
+            }
+        }
+    }
+    else if(n==3)
+    {
+        for (int i = 0; i < 128; i++)
+        {
+            for (int j = 0; j < 128; j++)
+            {
+                image[i][j] = image[i+128][j];
+            }
+        }
+    }
+    else if (n == 4)
+    {
+        for (int i = 0; i < 128; i++)
+        {
+            for (int j = 0; j < 128; j++)
+            {
+                image[i][j] = image[i+128][j+128];
+            }
+        }  
+    }
+
+
+    for (int i = 0; i < SIZE; i++)
+    {
+        for (int j = 0; j < SIZE; j= j+2)
+        {
+            bigimage[i][j] = image[i][j-x];
+            bigimage[i][j+1] = image[i][j-x];
+            
+            x++;
+        }
+        x = 1;
+        
+    }
+    for (int j = 0; j < SIZE; j++)
+    {
+        for (int i = 0; i < SIZE; i=i+2)
+        {
+            bigimage2[i][j] = bigimage[i-x][j];
+            bigimage2[i+1][j] = bigimage[i-x][j];
+            
+            x++;
+        }
+        x = 1;
+        
+    }
+    for (int i = 0; i < SIZE; i++)
+    {
+        for (int j = 0; j < SIZE; j++)
+            image[i][j] = bigimage2[i][j];
+    }
+}
+
+void mirror(int n)
+{
+    if(n==1)
+    {               //left
+        for (int i = 0; i < SIZE ; ++i) 
+        {
+            for (int j = 0; j < SIZE/2 ; ++j) 
+            {
+                image[i][SIZE-j]=image[i][j];
+            }
+        }
+    }
+
+    else if(n==2)
+    {               //right
+        for (int i = 0; i < SIZE ; ++i) 
+        {
+            for (int j = 128; j < SIZE ; ++j) 
+            {
+                image[i][SIZE-j]=image[i][j];
+            }
+        }
+
+    }
+
+    else if(n==3)
+    {               //upper
+        for (int i = 0; i < SIZE/2 ; ++i) 
+        {
+        for (int j = 0; j < SIZE ; ++j) 
+            {
+                image[SIZE-i][j]=image[i][j];
+            }
+        }
+
+    }
+
+    else if(n==4)
+    {               //down
+        for (int i = 128; i < SIZE ; ++i) 
+        {
+            for (int j = 0; j < SIZE ; ++j) 
+            {
+                image[SIZE-i][j]=image[i][j];
+            }
+        }
+    }
+}
+
+void shuffleimage()
+{
+    unsigned char q1[SIZE][SIZE];
+    unsigned char q2[SIZE][SIZE];
+    unsigned char q3[SIZE][SIZE];
+    unsigned char q4[SIZE][SIZE];
+
+
+    for (int i = 0; i < 128; i++)
+    {
+        for (int j = 0; j < 128; j++)
+        {
+            q1[i][j] = image[i][j];
+            q2[i][j] = image[i][j+128];
+            q3[i][j] = image[i+128][j];
+            q4[i][j] = image[i+128][j+128];
+
+        }
+    }
+
+    int q = 0, c = 1;
+    cout << "Please enter quarters order to shuffle the image: ";
+
+    while(c < 5)
+    {
+        int addi = 0, addj = 0;
+        cin >> q;
+
+        if(c == 2)
+            addj = 128;
+        else if(c == 3)
+            addi = 128;
+        else if(c == 4)
+        {
+            addi = 128;
+            addj = 128;
+        }
+            
+        for (int i = 0; i < 128; i++)
+        {
+            for (int j = 0; j < 128; j++)
+            {
+                if(q == 1)
+                    image[i+addi][j+addj] = q1[i][j];
+                else if(q == 2)
+                    image[i+addi][j+addj] = q2[i][j];
+                else if(q == 3)
+                    image[i+addi][j+addj] = q3[i][j];
+                else if(q == 4)
+                    image[i+addi][j+addj] = q4[i][j];             
+            }
+        }
+        c++;
+    }
 }
 
 
-
-
-
-
-
-
-void mirror(int n){
-    if(n==1){  //left
-     for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE/2 ; ++j) {
-            image[i][SIZE-j]=image[i][j];
-        }}
-
-    }
-    else if(n==2){//right
-        for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 128; j < SIZE ; ++j) {
-            image[i][SIZE-j]=image[i][j];
-        }}
-
-    }
-    else if(n==3){//upper
-        for (int i = 0; i < SIZE/2 ; ++i) {
-        for (int j = 0; j < SIZE ; ++j) {
-            image[SIZE-i][j]=image[i][j];
-        }}
-
-    }
-    else if(n==4){//down
-        for (int i = 128; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE ; ++j) {
-            image[SIZE-i][j]=image[i][j];
-        }}
-
-    }
-
-
-}
-
-
-
-void shrinkImage(){
+void shrinkImage()
+{
     //First I make temp white image to shrink the original one in it
+
     unsigned char image2[SIZE][SIZE];    
-    for (int i = 0; i <SIZE ; ++i) {
-        for (int j = 0; j <SIZE ; ++j) {
+
+    for (int i = 0; i <SIZE ; ++i) 
+    {
+        for (int j = 0; j <SIZE ; ++j) 
+        {
             image2[i][j] = 255;
         }
     }
+
     //I ask the user to choose the dimension he wants to shrink the original image in
+
     cout << "You want to shrink the image dimensions to: " << endl;  
     cout << "1- Half" << endl;
     cout << "2- One third" << endl;
     cout << "3- a Fourth" << endl;
+
     int shrinkType;
     cin >> shrinkType;
-    if(shrinkType == 1){
+
+    if(shrinkType == 1)
+    {
         // if he chooses 1 I will shrink the image dimensions to half 
         // by saving every 2 pixels in the original one in only 1 pixel in the temp image
-        for (int i = 0; i < SIZE  ; ++i) {
-            for (int j = 0; j < SIZE; ++j) {
+
+        for (int i = 0; i < SIZE  ; ++i) 
+        {
+            for (int j = 0; j < SIZE; ++j) 
+            {
                 image2[i/2][j/2] = image[i][j];
             }
         }
     }
         
-    else if(shrinkType == 2){
+    else if(shrinkType == 2)
+    {
         // if he chooses 2 I will shrink the image dimensions to one third 
         // by saving every 3 pixels in the original one in only 1 pixel in the temp image
-        for (int i = 0; i < SIZE  ; ++i) {
-            for (int j = 0; j < SIZE; ++j) {
+
+        for (int i = 0; i < SIZE  ; ++i) 
+        {
+            for (int j = 0; j < SIZE; ++j) 
+            {
                 image2[i/3][j/3] = image[i][j];
             }
         }
     }
-    else{
+
+    else
+    {
         // if he chooses 3 I will shrink the image dimensions to a fourth 
         // by saving every 4 pixels in the original one in only 1 pixel in the temp image
-        for (int i = 0; i < SIZE  ; ++i) {
-            for (int j = 0; j < SIZE; ++j) {
+        
+        for (int i = 0; i < SIZE  ; ++i) 
+        {
+            for (int j = 0; j < SIZE; ++j) 
+            {
                 image2[i/4][j/4] = image[i][j];
             }
         }
     }
     
     // finally I make the original image equal to the shrinked one to print it
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j <SIZE ; ++j) {
+
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j <SIZE ; ++j) 
+        {
             image[i][j] = image2[i][j];
         }
     }
@@ -296,69 +460,88 @@ void shrinkImage(){
 
 
 
-
-
-
-
-
-void crop(int x,int y , int length,int width){
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE ; ++j) {
-            if (i < x || i > x+length || j < y || j > y+width ){
+void crop(int x,int y , int length,int width)
+{
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j < SIZE ; ++j) 
+        {
+            if (i < x || i > x+length || j < y || j > y+width )
                 image[i][j]=255;
-
-            }
-        }}
+            
+        }
+    }
 
 }
 
 
 
-void blur(){
+void blur()
+{
     // first I made a temp image to assign the blured pixels in
+
     unsigned char image2[SIZE][SIZE];
 
     // The idea of blur is to make every pixel in the image equal to the average of all the pixels around it
     // But, we will face a problem, which is dealing with the pixels on the edges
     // So I made a directional array , one for the index of the row of the pixel I will check that is it in the range or not
     // and the other one for the index of the column of the same pixel
+
     int dx[] = {-1,-1,-1,0,0,0,1,1,1};
     int dy[] = {-1,0,1,-1,0,1,-1,0,1};
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE ; ++j) {
+
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j < SIZE ; ++j) 
+        {
             // Now I made 2 variables, one for the total values of the pixels around the one i want to blur
             // and the other one will count how many pixels I will take ( in the range of the image )
+
             int tot = 0  , count = 0;
-            for (int k = 0; k < 9 ; ++k) {
+
+            for (int k = 0; k < 9 ; ++k) 
+            {
                 // Now I looped on the 8 pixels around the pixel i want to blur
+
                 int nx = i + dx[k];
                 int ny = j + dy[k];
-                if(ny >= 0 && ny < SIZE && nx >= 0 && nx < SIZE){
+
+                if(ny >= 0 && ny < SIZE && nx >= 0 && nx < SIZE)
+                {
                     //then checked if that pixel, which is around the pixel I want to blur, is in the range or not
                     // if the pixel in range of the image I will add its value in the (tot) variable
                     // and I will count it as a valid pixel (count++)
+
                     tot += image[nx][ny];
                     count++;
                 }
             }
+
             //after that I will get the average of every valid pixel 
             // by dividing those value on the amount of them
+
             image2[i][j] = tot / count;
         }
     }
     
     // finally i will make the image I want to print = the blured image
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE; ++j) {
+
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j < SIZE; ++j) 
+        {
             image[i][j] = image2[i][j];
         }
     }
+
     // I noticed that the degree of blur is not as same as the one on the sample PDF for filters
 }
 
 
-void blurImage(){
+void blurImage()
+{
     // so I repeated the function 6 times to approach the same blur as the PDF filter
+
     blur();
     blur();
     blur();
@@ -371,22 +554,29 @@ void blurImage(){
 
 
 
-void skewImageHorizontally(){
+void skewImageHorizontally()
+{
     // first I made 2 white temp images
     // one I will shrink the original image in
     // the other one I will skew the shrank image in
+
     unsigned char image2[SIZE][SIZE];
     unsigned char image3[SIZE][SIZE];
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE; ++j) {
+
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j < SIZE; ++j) 
+        {
             image2[i][j] = 255;
             image3[i][j] = 255;
         }
     }
 
     // now I will take the angle from the user
+
     double angle;
     cin >> angle;
+
     angle = 90 - angle;  // I did that because you want the angle that is complementary to the angle I am dealing with
     angle = (angle * 22) / (180 * 7);
     
@@ -395,15 +585,20 @@ void skewImageHorizontally(){
     double step = SIZE - x; // this is the starting position to put the pixels in the skewed image
     double move = step/ SIZE; // this is the move I will take back to make the image skewed
     
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE ; ++j) {
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j < SIZE ; ++j) 
+        {
             // now I shrank the original image in ( x / SIZE ) of the columns 
+
             image2[i][(j*x)/SIZE] = image[i][j];
         }
     }
 
-    for (int i = 0; i <SIZE ; ++i) {
-        for (int j = (int)step; j < step+x ; ++j) {
+    for (int i = 0; i <SIZE ; ++i) 
+    {
+        for (int j = (int)step; j < step+x ; ++j) 
+        {
             // Now, I will start sorting the index from the starting position till complete the same size of shrank base
             //Every row I start copying the pixels from the shrank image, I want to make sure that I'm taking pixels
             // from the first column
@@ -416,16 +611,59 @@ void skewImageHorizontally(){
         
         step -= move;
     }
+
     //finally I make the original image equal to the skewed one to print it
-    for (int i = 0; i < SIZE; ++i) {
-        for (int j = 0; j < SIZE; ++j) {
+    
+    for (int i = 0; i < SIZE; ++i)
+    {
+        for (int j = 0; j < SIZE; ++j) 
+        {
             image[i][j] = image3[i][j];
         }
     }
 }
 
 
+void skew_image_vertical(int angle)
+{
 
+    float rad_angle;
+    rad_angle = ((float)angle*(22.0/7))/180.0;
+
+    int move;
+    move = 256*tan(rad_angle);
+
+    unsigned char bigimage[SIZE+move][SIZE];
+
+    for (int i = 0; i < (SIZE+move); i++)
+    {
+        for (int j = 0; j < SIZE; j++)
+        {
+            bigimage[i][j] = 255;
+        }
+        
+    }
+
+    for (int j = 0; j < SIZE; j++)
+    {
+        move = (256 - j)*tan(rad_angle);
+
+        for (int i = 0; i < SIZE; i++)
+        {
+            bigimage[i+move][j] = image[i][j];
+        }
+    }
+
+    move = 256*tan(rad_angle);
+    
+    for (int i = 0; i < SIZE; i++)
+    {            
+        for (int j = 0; j < SIZE; j++)
+        {
+                image[i][j] = bigimage[(int)(((256+move)/256.0)*i)][j];
+        }   
+    }
+}
 
 
 void showmenu()
@@ -501,6 +739,7 @@ int main()
             cout << "Please select an angle to rotate: ";
             cout << "\n\n1- 90\n2- 180\n3- 270\n";
             cin >> angle;
+            
             rotateImage(angle);
         } 
 
@@ -509,45 +748,77 @@ int main()
             darkenAndLighten();
         } 
 
-        else if (filterNum =='7'){
+        else if (filterNum =='7')
+        {
             detect();
         }
-        else if (filterNum == '8'){
 
+        else if (filterNum == '8')
+        {
+            int n = 0;
+
+            cout << "Quarter num: ";
+            cin >> n;
+
+            enlargeimage(n);
         }
-        else if (filterNum == '9'){
+
+        else if (filterNum == '9')
+        {
             shrinkImage();
         }
-        else if (filterNum == 'a'){
+
+        else if (filterNum == 'a')
+        {
             cout << "Please select a mirror side: \n";
             cout << "\n1- left\n2- right\n3- upper\n4- down\n";
+
             int n;
             cin>>n;
+
             mirror(n);
         }
-        else if (filterNum == 'b'){
-            
+
+        else if (filterNum == 'b')
+        {
+            shuffleimage();
         }
-        else if (filterNum == 'c'){
+
+        else if (filterNum == 'c')
+        {
             blurImage();
         }
-        else if (filterNum == 'd'){
+
+        else if (filterNum == 'd')
+        {
             cout << "please enter  x ,y ,length ,width :  ";
             int x,y,length,width;
             cin >> x >> y >> length >> width;
+
             crop( x , y , length , width ) ;
         }
-        else if (filterNum == 'e'){
+        
+        else if (filterNum == 'e')
+        {
             skewImageHorizontally();
         }
-        else if (filterNum == 'f'){
+
+        else if (filterNum == 'f')
+        {
+            int angle;
             
+            cout << "Skew with angle: ";
+            cin >> angle;
+
+            skew_image_vertical(angle);
         }
        
         else if (filterNum == 'l')
         {
             loadImage();
             showmenu();
+
+            cout << "Your choice is: ";
             continue;
         } 
 
