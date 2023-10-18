@@ -11,7 +11,7 @@
 #include "bmplib.cpp"
 
 using namespace std;
-unsigned char image[SIZE][SIZE][RGB];
+unsigned char image[SIZE][SIZE][3];
 
 
 void loadImage(){
@@ -69,24 +69,33 @@ void invertImage()
 
 void flipImage(int n) 
 {
-    if (n == 1){    //horizontal
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE / 2; j++) {
-                for(int t=0;t<3;t++){
-                int num = image[i][j][t];               //In each row we change the value of the first pixel with the last pixel
-                image[i][j][t] = image[i][SIZE - j][t]; //and then the value of the second pixel with the penultimate pixel and so on
-                image[i][SIZE - j][t] = num;            //until we reach the middle of the row
+    if (n == 1)
+    {               //horizontal
+        for (int i = 0; i < SIZE; i++) 
+        {
+            for (int j = 0; j < SIZE / 2; j++) 
+            {
+                for(int t=0;t<3;t++)
+                {
+                    int num = image[i][j][t];               //In each row we change the value of the first pixel with the last pixel
+                    image[i][j][t] = image[i][SIZE - j][t]; //and then the value of the second pixel with the penultimate pixel and so on
+                    image[i][SIZE - j][t] = num;            //until we reach the middle of the row
                 }
             }
         }
     }
-    else{      //vertical
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE/2 ; j++) {
-                for(int t=0;t<3;t++){
-                int num = image[j][i][t];              //In each column we change the value of the first pixel with the last pixel
-                image[j][i][t] = image[SIZE-j][i][t];  //and then the value of the second pixel with the penultimate pixel and so on
-                image[SIZE-j][i] [t]= num;             //until we reach the middle of the column
+
+    else
+    {               //vertical
+        for (int i = 0; i < SIZE; i++) 
+        {
+            for (int j = 0; j < SIZE/2 ; j++) 
+            {
+                for(int t=0;t<3;t++)
+                {
+                    int num = image[j][i][t];              //In each column we change the value of the first pixel with the last pixel
+                    image[j][i][t] = image[SIZE-j][i][t];  //and then the value of the second pixel with the penultimate pixel and so on
+                    image[SIZE-j][i] [t]= num;             //until we reach the middle of the column
                 }                  
             }
         }
@@ -122,7 +131,8 @@ void rotateImage(int angle)
 
 
 
-void detect(){
+void detect()
+{
     
     unsigned char image_bw[SIZE][SIZE][RGB];
 
@@ -140,18 +150,23 @@ void detect(){
         }
     }
 
-       for (int i = 1; i < SIZE-1 ; ++i) {
-        for (int j = 1; j < SIZE-1 ; ++j) {
-            for(int t=0;t<3;t++){
-           if(image_bw[i-1][j][t] != image_bw[i+1][j][t] || image_bw[i][j-1][t] != image_bw[i+1][j+1][t]  ){
-           image[i][j][t]=image_bw[i][j][t];            // To find the edge, we stop at each pixel and compare the pixel after it and the pixel before it,
-           }                                            // then compare the pixel above it and the pixel below it.
-           else{                                        //  If the values are different, then the pixel is this edge, and if not, we make it white
-            image[i][j][t] = 255;                       
-           }
+    for (int i = 1; i < SIZE-1 ; ++i) 
+    {
+        for (int j = 1; j < SIZE-1 ; ++j) 
+        {
+            for(int t=0;t<3;t++)
+            {
+                if(image_bw[i-1][j][t] != image_bw[i+1][j][t] || image_bw[i][j-1][t] != image_bw[i+1][j+1][t]  )
+                    image[i][j][t]=image_bw[i][j][t];            // To find the edge, we stop at each pixel and compare the pixel after it and the pixel before it,
+                                                                // then compare the pixel above it and the pixel below it.
+                else                                           //  If the values are different, then the pixel is this edge, and if not, we make it white
+                    image[i][j][t] = 255;                       
+            
             }
-        }}
+        }
+    }
 }
+
 
 void enlargeimage(int n)
 {
@@ -241,45 +256,63 @@ void enlargeimage(int n)
 }
 
 
-void mirror(int n){
-    if(n==1){  //left
-     for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE/2 ; ++j) {
-            for(int t=0;t<3;t++){
-            image[i][SIZE-j][t]=image[i][j][t];
+void mirror(int n)
+{
+    if(n==1)
+    {             //left
+        for (int i = 0; i < SIZE ; ++i) 
+        {
+            for (int j = 0; j < SIZE/2 ; ++j) 
+            {
+                for(int t=0;t<3;t++)
+                {
+                    image[i][SIZE-j][t]=image[i][j][t];
+                }
             }
-        }}
+        }
+    }
+    else if(n==2)
+    {            //right
+        for (int i = 0; i < SIZE ; ++i) 
+        {
+            for (int j = 128; j < SIZE ; ++j) 
+            {
+                for(int t=0;t<3;t++)
+                {
+                    image[i][SIZE-j][t]=image[i][j][t];
+                }
+            }
+        }
 
     }
-    else if(n==2){//right
-        for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 128; j < SIZE ; ++j) {
-             for(int t=0;t<3;t++){
-            image[i][SIZE-j][t]=image[i][j][t];
-             }
-        }}
+    else if(n==3)
+    {           //upper
+        for (int i = 0; i < SIZE/2 ; ++i) 
+        {
+            for (int j = 0; j < SIZE ; ++j) 
+            {
+                for(int t=0;t<3;t++)
+                {
+                    image[SIZE-i][j][t]=image[i][j][t];
+                }
+            }
+        }
 
     }
-    else if(n==3){//upper
-        for (int i = 0; i < SIZE/2 ; ++i) {
-        for (int j = 0; j < SIZE ; ++j) {
-             for(int t=0;t<3;t++){
-            image[SIZE-i][j][t]=image[i][j][t];
-             }
-        }}
+    else if(n==4)
+    {           //down
+        for (int i = 128; i < SIZE ; ++i) 
+        {
+        for (int j = 0; j < SIZE ; ++j) 
+            {
+                for(int t=0;t<3;t++)
+                {
+                    image[SIZE-i][j][t]=image[i][j][t];
+                }
+            }
+        }
 
     }
-    else if(n==4){//down
-        for (int i = 128; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE ; ++j) {
-             for(int t=0;t<3;t++){
-            image[SIZE-i][j][t]=image[i][j][t];
-             }
-        }}
-
-    }
-
-
 }
 
 
@@ -345,35 +378,45 @@ void shuffleimage()
 }
 
 
-void crop(int x,int y , int lenth,int width){
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE ; ++j) {
-            for(int t=0;t<3;t++){
-            if (i < x || i > x+lenth || j < y || j > y+width ){
-                image[i][j][t]=255;
-
+void crop(int x,int y , int lenth,int width)
+{
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j < SIZE ; ++j) 
+            {
+                for(int t=0;t<3;t++)
+                {
+                    if (i < x || i > x+lenth || j < y || j > y+width )
+                        image[i][j][t]=255;
+                }
             }
-            }
-        }}
-
+    }
 }
 
 
 
-void mergeImage(){
+void mergeImage()
+{
     //first I took the image that the user want to merge with
+
     unsigned char merge[SIZE][SIZE][RGB];
     char mergeFileName[100];
+
     cout << "Enter the source image file name you want to merge with: " << endl;
     cin >> mergeFileName;
+
     strcat(mergeFileName , ".bmp");
     readRGBBMP(mergeFileName , merge);
 
     //then I looped on the 3D array and assign every pixel
     //to the average between the original image and the one I want to merge with
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE; ++j) {
-            for (int k = 0; k < RGB ; ++k) {
+
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j < SIZE; ++j) 
+        {
+            for (int k = 0; k < RGB ; ++k) 
+            {
                 image[i][j][k] = (image[i][j][k] + merge[i][j][k]) / 2;
             }
         }
@@ -382,40 +425,50 @@ void mergeImage(){
 
 
 
-void darkenAndLighten(){
+void darkenAndLighten()
+{
     cout << "1- Lighten\n2- Darken\n" << endl; // first i asked the user what he wants to do, lighten or darken
 
     int type;
     cin >> type;   // if he chooses to light the image he will enter 1 , else he will enter 2
 
 
-    for (int i = 0; i <SIZE ; ++i) {
-        for (int j = 0; j <SIZE ; ++j) {
-            for (int k = 0; k < RGB; ++k) {
-                if(type == 1){
+    for (int i = 0; i <SIZE ; ++i) 
+    {
+        for (int j = 0; j <SIZE ; ++j) 
+        {
+            for (int k = 0; k < RGB; ++k) 
+            {
+                if(type == 1)
+                {
                     image[i][j][k] += (256 - image[i][j][k]) / 2;
                     // if he chooses to light it, I'll light the pixel by 50% by this equation: image[i][j][k] += (256 - image[i][j][k])/2
                 }
-                else{
+                else
+                {
                     image[i][j][k] -= (image[i][j][k] / 2);
                     // And if he chooses 2, I will just minus 50% of the pixel amount by this equation: image[i][j][k] -= image[i][j][k] / 2
                 }
 
             }
-            }
         }
-
     }
+}
 
 
 
 
-void shrinkImage(){
+void shrinkImage()
+{
     //First I make temp white image to shrink the original one in it
     unsigned char image2[SIZE][SIZE][RGB];
-    for (int i = 0; i <SIZE ; ++i) {
-        for (int j = 0; j <SIZE ; ++j) {
-            for (int k = 0; k < RGB ; ++k) {
+
+    for (int i = 0; i <SIZE ; ++i) 
+    {
+        for (int j = 0; j <SIZE ; ++j) 
+        {
+            for (int k = 0; k < RGB ; ++k) 
+            {
                 image2[i][j][k] = 255;
             }
         }
@@ -426,36 +479,53 @@ void shrinkImage(){
     cout << "1- Half" << endl;
     cout << "2- One third" << endl;
     cout << "3- a Fourth" << endl;
+
     int shrinkType;
     cin >> shrinkType;
-    if(shrinkType == 1){
+
+    if(shrinkType == 1)
+    {
         // if he chooses 1 I will shrink the image dimensions to half
         // by saving every 2 pixels in the original one in only 1 pixel in the temp image
-        for (int i = 0; i < SIZE  ; ++i) {
-            for (int j = 0; j < SIZE; ++j) {
-                for (int k = 0; k <RGB ; ++k) {
+
+        for (int i = 0; i < SIZE  ; ++i) 
+        {
+            for (int j = 0; j < SIZE; ++j) 
+            {
+                for (int k = 0; k <RGB ; ++k) 
+                {
                     image2[i/2][j/2][k] = image[i][j][k];
                 }
             }
         }
     }
-    else if(shrinkType == 2){
+    else if(shrinkType == 2)
+    {
         // if he chooses 2 I will shrink the image dimensions to one third
         // by saving every 3 pixels in the original one in only 1 pixel in the temp image
-        for (int i = 0; i < SIZE  ; ++i) {
-            for (int j = 0; j < SIZE; ++j) {
-                for (int k = 0; k <RGB ; ++k) {
+
+        for (int i = 0; i < SIZE  ; ++i) 
+        {
+            for (int j = 0; j < SIZE; ++j) 
+            {
+                for (int k = 0; k <RGB ; ++k) 
+                {
                     image2[i/3][j/3][k] = image[i][j][k];
                 }
             }
         }
     }
-    else{
+    else
+    {
         // if he chooses 3 I will shrink the image dimensions to a fourth
         // by saving every 4 pixels in the original one in only 1 pixel in the temp image
-        for (int i = 0; i < SIZE  ; ++i) {
-            for (int j = 0; j < SIZE; ++j) {
-                for (int k = 0; k <RGB ; ++k) {
+
+        for (int i = 0; i < SIZE  ; ++i) 
+        {
+            for (int j = 0; j < SIZE; ++j) 
+            {
+                for (int k = 0; k <RGB ; ++k) 
+                {
                     image2[i/4][j/4][k] = image[i][j][k];
                 }
             }
@@ -463,9 +533,13 @@ void shrinkImage(){
     }
 
     // finally I make the original image equal to the shrinked one to print it
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j <SIZE ; ++j) {
-            for (int k = 0; k <RGB ; ++k) {
+
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j <SIZE ; ++j) 
+        {
+            for (int k = 0; k <RGB ; ++k) 
+            {
                 image[i][j][k] = image2[i][j][k];
             }
 
@@ -487,28 +561,34 @@ void blur(){
     int dx[] = {-1,-1,-1,0,0,0,1,1,1};
     int dy[] = {-1,0,1,-1,0,1,-1,0,1};
 
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE ; ++j) {
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j < SIZE ; ++j) 
+        {
             // Now, I made 3 variables for the total values of every part of the pixel [ Red , Green , Blue ]
             // And 3 counters to count how many parts I will take with me ( in the range of the image )
             int tot1 = 0 ,tot2 = 0,tot3 = 0, count1 = 0 ,count2 = 0,count3 = 0;
-                for (int l = 0; l < 9 ; ++l) {
-                    // Now I looped on the 8 pixels around the pixel i want to blur
-                    int nx = i + dx[l];
-                    int ny = j + dy[l];
-                    if(ny >= 0 && ny < SIZE && nx >= 0 && nx < SIZE){
 
-                        //then checked if that pixel, which is around the pixel I want to blur, is in the range or not
-                        // if the pixel in range of the image I will add all of its value [ Red , Green , Blue ] in the (tot) variables
-                        // and I will count it as a valid pixel in each counter
-                        tot1 += image[nx][ny][0];
-                        count1++;
-                        tot2 += image[nx][ny][1];
-                        count2++;
-                        tot3 += image[nx][ny][2];
-                        count3++;
+            for (int l = 0; l < 9 ; ++l) 
+            {
+                // Now I looped on the 8 pixels around the pixel i want to blur
+                int nx = i + dx[l];
+                int ny = j + dy[l];
+
+                if(ny >= 0 && ny < SIZE && nx >= 0 && nx < SIZE)
+                {
+
+                    //then checked if that pixel, which is around the pixel I want to blur, is in the range or not
+                    // if the pixel in range of the image I will add all of its value [ Red , Green , Blue ] in the (tot) variables
+                    // and I will count it as a valid pixel in each counter
+                    tot1 += image[nx][ny][0];
+                    count1++;
+                    tot2 += image[nx][ny][1];
+                    count2++;
+                    tot3 += image[nx][ny][2];
+                    count3++;
                 }
-                }
+            }
             //after that I will get the average of every valid pixel part [RGB]
             // by dividing those value on the amount of them
             image2[i][j][0] = tot1 / count1;
@@ -518,16 +598,24 @@ void blur(){
     }
 
     // finally i will make the image I want to print = the blured image
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE; ++j) {
-            for (int k = 0; k <RGB ; ++k) {
+
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j < SIZE; ++j) 
+        {
+            for (int k = 0; k <RGB ; ++k) 
+            {
                 image[i][j][k] = image2[i][j][k];
             }
         }
     }
+
     // I noticed that the degree of blur is not as same as the one on the sample PDF for filters
 }
-void blurImage(){
+
+
+void blurImage()
+{
     // so I repeated the function 10 times to approach the same blur as the PDF filter
     blur();
     blur();
@@ -547,12 +635,16 @@ void skewImageHorizontally(){
     // first I made 2 white temp images
     // one I will shrink the original image in
     // the other one I will skew the shrank image in
+
     unsigned char image2[SIZE][SIZE][RGB];
     unsigned char image3[SIZE][SIZE][RGB];
 
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE; ++j) {
-            for (int k = 0; k < RGB ; ++k) {
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j < SIZE; ++j) 
+        {
+            for (int k = 0; k < RGB ; ++k) 
+            {
                 image2[i][j][k] = 255;
                 image3[i][j][k] = 255;
             }
@@ -563,6 +655,7 @@ void skewImageHorizontally(){
     // now I will take the angle from the user
     double angle;
     cin >> angle;
+
     angle = 90 - angle;  // I did that because you want the angle that is complementary to the angle I am dealing with
     angle = (angle * 22) / (180 * 7);
 
@@ -573,9 +666,12 @@ void skewImageHorizontally(){
     double move = step/ SIZE;   // this is the move I will take back to make the image skewed
 
 
-    for (int i = 0; i < SIZE ; ++i) {
-        for (int j = 0; j < SIZE ; ++j) {
-            for (int k = 0; k <RGB ; ++k) {
+    for (int i = 0; i < SIZE ; ++i) 
+    {
+        for (int j = 0; j < SIZE ; ++j) 
+        {
+            for (int k = 0; k <RGB ; ++k) 
+            {
                 // now I shrank the original image in ( x / SIZE ) of the columns
                 image2[i][(j*x)/SIZE][k] = image[i][j][k];
             }
@@ -583,9 +679,12 @@ void skewImageHorizontally(){
         }
     }
 
-    for (int i = 0; i <SIZE ; ++i) {
-        for (int j = (int)step; j < step+x ; ++j) {
-            for (int k = 0; k <RGB ; ++k) {
+    for (int i = 0; i <SIZE ; ++i) 
+    {
+        for (int j = (int)step; j < step+x ; ++j) 
+        {
+            for (int k = 0; k <RGB ; ++k) 
+            {
                 // Now, I will start sorting the index from the starting position till complete the same size of shrank base
                 //Every row I start copying the pixels from the shrank image, I want to make sure that I'm taking pixels
                 // from the first column
@@ -593,15 +692,20 @@ void skewImageHorizontally(){
             }
 
         }
+
         // after that I start the new row of pixels from the new column, which will be
         // starting position - the move i will take back
         step -= move;
     }
 
     //finally I make the original image equal to the skewed one to print it
-    for (int i = 0; i < SIZE; ++i) {
-        for (int j = 0; j < SIZE; ++j) {
-            for (int k = 0; k <RGB ; ++k) {
+
+    for (int i = 0; i < SIZE; ++i) 
+    {
+        for (int j = 0; j < SIZE; ++j) 
+        {
+            for (int k = 0; k <RGB ; ++k) 
+            {
                 image[i][j][k] = image3[i][j][k];
             }
 
@@ -757,10 +861,12 @@ int main()
 
             enlargeimage(n);
         }
-        else if (filterNum == '9'){
+        else if (filterNum == '9')
+        {
              shrinkImage();
         }
-        else if (filterNum == 'a'){
+        else if (filterNum == 'a')
+        {
             cout << "Please select a mirror side: \n";
             cout << "\n1- left\n2- right\n3- upper\n4- down\n";
             int n;
@@ -771,16 +877,19 @@ int main()
         {
             shuffleimage();    
         }
-        else if (filterNum == 'c'){
+        else if (filterNum == 'c')
+        {
             blurImage();
         }
-        else if (filterNum == 'd'){
+        else if (filterNum == 'd')
+        {
             cout << "please enter  x ,y ,length ,width :  ";
             int x,y,length,width;
             cin >> x >> y >> length >> width;
             crop( x , y , length , width ) ;
         }
-        else if (filterNum == 'e'){
+        else if (filterNum == 'e')
+        {
             skewImageHorizontally();
         }
         else if (filterNum == 'f')
@@ -815,7 +924,6 @@ int main()
         }
 
         showmenu();
-
         cout << "Your choice is: ";
     }
 }
