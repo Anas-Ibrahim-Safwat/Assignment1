@@ -214,7 +214,7 @@ void enlargeimage(int n)
 
     if(n == 2)
     {
-        for (int i = 0; i < 128; i++)
+        for (int i = 0; i < 128; i++)   // first we set the quarter we want to enlarge into the first quarter
         {
             for (int j = 0; j < 128; j++)
             {
@@ -244,7 +244,7 @@ void enlargeimage(int n)
     }
 
 
-    for (int i = 0; i < SIZE; i++)
+    for (int i = 0; i < SIZE; i++)         // then we enlarge the image left half first into the whole picture
     {
         for (int j = 0; j < SIZE; j= j+2)
         {
@@ -258,7 +258,7 @@ void enlargeimage(int n)
     }
     for (int j = 0; j < SIZE; j++)
     {
-        for (int i = 0; i < SIZE; i=i+2)
+        for (int i = 0; i < SIZE; i=i+2)    // and then do the same verticaly to fill the image with its 1st quarter
         {
             bigimage2[i][j] = bigimage[i-x][j];
             bigimage2[i+1][j] = bigimage[i-x][j];
@@ -270,7 +270,7 @@ void enlargeimage(int n)
     }
     for (int i = 0; i < SIZE; i++)
     {
-        for (int j = 0; j < SIZE; j++)
+        for (int j = 0; j < SIZE; j++)    // last we set the image to the edited one for saving
             image[i][j] = bigimage2[i][j];
     }
 }
@@ -326,7 +326,7 @@ void mirror(int n)
 
 void shuffleimage()
 {
-    unsigned char q1[SIZE][SIZE];
+    unsigned char q1[SIZE][SIZE];  // we put each quarter in a separte array
     unsigned char q2[SIZE][SIZE];
     unsigned char q3[SIZE][SIZE];
     unsigned char q4[SIZE][SIZE];
@@ -334,7 +334,7 @@ void shuffleimage()
 
     for (int i = 0; i < 128; i++)
     {
-        for (int j = 0; j < 128; j++)
+        for (int j = 0; j < 128; j++)  // then we fill them with all 4 quarters
         {
             q1[i][j] = image[i][j];
             q2[i][j] = image[i][j+128];
@@ -345,20 +345,20 @@ void shuffleimage()
     }
 
     int q = 0, c = 1;
-    cout << "Please enter quarters order to shuffle the image: ";
+    cout << "Please enter quarters order to shuffle the image: ";    // then we get their order form the user
 
     while(c < 5)
     {
-        int addi = 0, addj = 0;
+        int addi = 0, addj = 0;  // we set a thee variables to control where to start printing each quarter of the image
         cin >> q;
 
         if(c == 2)
-            addj = 128;
+            addj = 128;         // if 2 then we start printing in the second quarter
         else if(c == 3)
-            addi = 128;
+            addi = 128;         // if 3 then we start printing in the their quarter
         else if(c == 4)
         {
-            addi = 128;
+            addi = 128;         // if 4 then we start printing in the fourth quarter
             addj = 128;
         }
             
@@ -367,7 +367,7 @@ void shuffleimage()
             for (int j = 0; j < 128; j++)
             {
                 if(q == 1)
-                    image[i+addi][j+addj] = q1[i][j];
+                    image[i+addi][j+addj] = q1[i][j];  // we go through each quarter in order and fill them one by one in the order given by the user
                 else if(q == 2)
                     image[i+addi][j+addj] = q2[i][j];
                 else if(q == 3)
@@ -376,7 +376,7 @@ void shuffleimage()
                     image[i+addi][j+addj] = q4[i][j];             
             }
         }
-        c++;
+        c++;   // then we go to the next quarter and repeat till the fouth one
     }
 }
 
@@ -551,9 +551,6 @@ void blurImage()
 }
 
 
-
-
-
 void skewImageHorizontally()
 {
     // first I made 2 white temp images
@@ -628,18 +625,18 @@ void skew_image_vertical(int angle)
 {
 
     float rad_angle;
-    rad_angle = ((float)angle*(22.0/7))/180.0;
+    rad_angle = ((float)angle*(22.0/7))/180.0; // we first turn the angle from deg to rad
 
     int move;
     move = 256*tan(rad_angle);
 
-    unsigned char bigimage[SIZE+move][SIZE];
+    unsigned char bigimage[SIZE+move][SIZE];   // we make a bigger image to hold the skewed unshrinked phase
 
     for (int i = 0; i < (SIZE+move); i++)
     {
         for (int j = 0; j < SIZE; j++)
         {
-            bigimage[i][j] = 255;
+            bigimage[i][j] = 255;             // we make it all white to get whilte triangles at the sides
         }
         
     }
@@ -648,7 +645,7 @@ void skew_image_vertical(int angle)
     {
         move = (256 - j)*tan(rad_angle);
 
-        for (int i = 0; i < SIZE; i++)
+        for (int i = 0; i < SIZE; i++)        // we go through each colomn displacing it by a certain valus "move" and decresing it till it becomes 0 in the last row
         {
             bigimage[i+move][j] = image[i][j];
         }
@@ -660,7 +657,7 @@ void skew_image_vertical(int angle)
     {            
         for (int j = 0; j < SIZE; j++)
         {
-                image[i][j] = bigimage[(int)(((256+move)/256.0)*i)][j];
+                image[i][j] = bigimage[(int)(((256+move)/256.0)*i)][j];     // then we shrink the image verticaly by the same ratio between the big image and the original one
         }   
     }
 }
