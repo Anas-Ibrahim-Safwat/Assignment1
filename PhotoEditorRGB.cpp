@@ -54,6 +54,19 @@ void blackAndWhite()
     }
 }
 
+void invertImage()
+{
+    for (int i = 0; i < SIZE; i++)
+    {
+        for (int j = 0; j < SIZE; j++)
+        {
+            for(int k = 0; k < 3; k++)    
+                image[i][j][k] = 255 - image[i][j][k];
+        }
+    }
+}
+
+
 void flipImage(int n) 
 {
     if (n == 1){    //horizontal
@@ -79,6 +92,34 @@ void flipImage(int n)
         }
     }
 }
+
+void rotateImage(int angle)
+{
+    unsigned char image_r[SIZE][SIZE][3];
+
+    while(angle)
+    {
+        for (int i = 0; i < SIZE; i++)
+        {
+            for (int j = SIZE - 1; j >= 0; j--)
+            {
+                for(int k = 0; k < 3; k++)
+                    image_r[i][j][k] = image[SIZE - j][i][k];
+            }
+        }
+        angle--;
+
+        for (int i = 0; i < SIZE; i++)
+            {
+                for (int j = 0; j < SIZE; j++)
+                {
+                    for(int k = 0; k < 3; k++)
+                        image[i][j][k] = image_r[i][j][k];
+                }
+            }
+    }
+}
+
 
 
 void detect(){
@@ -112,6 +153,92 @@ void detect(){
         }}
 }
 
+void enlargeimage(int n)
+{
+    unsigned char bigimage[SIZE][SIZE][3];
+    unsigned char bigimage2[SIZE][SIZE][3];
+
+    int x = 1;
+
+    if(n == 2)
+    {
+        for (int i = 0; i < 128; i++)
+        {
+            for (int j = 0; j < 128; j++)
+            {
+                for(int k = 0; k < 3; k++)
+                    image[i][j][k] = image[i][j+128][k];
+            }
+        }
+    }
+    else if(n==3)
+    {
+        for (int i = 0; i < 128; i++)
+        {
+            for (int j = 0; j < 128; j++)
+            {
+                for(int k = 0; k < 3; k++)
+                    image[i][j][k] = image[i+128][j][k];
+            }
+        }
+    }
+    else if (n == 4)
+    {
+        for (int i = 0; i < 128; i++)
+        {
+            for (int j = 0; j < 128; j++)
+            {
+                for(int k = 0; k < 3; k++)
+                    image[i][j][k] = image[i+128][j+128][k];
+            }
+        }  
+    }
+
+
+    for (int i = 0; i < SIZE; i++)
+    {
+        for (int j = 0; j < SIZE; j= j+2)
+        {
+            for(int k = 0; k < 3; k++)
+            {
+                bigimage[i][0][k] = image[i][0][k];
+                bigimage[i][1][k] = image[i][1][k];
+                
+                bigimage[i][j][k] = image[i][j-x][k];
+                bigimage[i][j+1][k] = image[i][j-x][k];
+            
+            }
+            x++;
+        }
+        x = 1; 
+    }
+    for (int j = 0; j < SIZE; j++)
+    {
+        for (int i = 0; i < SIZE; i=i+2)
+        {
+            for(int k = 0; k < 3; k++)
+            {
+                bigimage[i][0][k] = image[i][0][k];
+                bigimage[i][1][k] = image[i][1][k];
+
+                bigimage2[i][j][k] = bigimage[i-x][j][k];
+                bigimage2[i+1][j][k] = bigimage[i-x][j][k];
+            
+            }
+            x++;
+        }
+        x = 1;
+        
+    }
+    for (int i = 0; i < SIZE; i++)
+    {
+        for (int j = 0; j < SIZE; j++)
+        {
+            for(int k = 0; k < 3; k++)    
+                image[i][j][k] = bigimage2[i][j][k];
+        }
+    }
+}
 
 
 void mirror(int n){
@@ -156,11 +283,66 @@ void mirror(int n){
 }
 
 
+void shuffleimage()
+{
+    unsigned char q1[SIZE][SIZE][3];
+    unsigned char q2[SIZE][SIZE][3];
+    unsigned char q3[SIZE][SIZE][3];
+    unsigned char q4[SIZE][SIZE][3];
 
 
+    for (int i = 0; i < 128; i++)
+    {
+        for (int j = 0; j < 128; j++)
+        {
+            for(int k = 0; k < 3; k++)
+            {
+                q1[i][j][k] = image[i][j][k];
+                q2[i][j][k] = image[i][j+128][k];
+                q3[i][j][k] = image[i+128][j][k];
+                q4[i][j][k] = image[i+128][j+128][k];
+            }
+        }
+    }
 
+    int q = 0, c = 1;
+    cout << "Please enter quarters order to shuffle the image:\n" << endl;
 
+    while(c < 5)
+    {
+        int addi = 0, addj = 0;
+        cin >> q;
 
+        if(c == 2)
+            addj = 128;
+        else if(c == 3)
+            addi = 128;
+        else if(c == 4)
+        {
+            addi = 128;
+            addj = 128;
+        }
+            
+        for (int i = 0; i < 128; i++)
+        {
+            for (int j = 0; j < 128; j++)
+            {
+                for(int k = 0; k < 3; k++)
+                {
+                    if(q == 1)
+                        image[i+addi][j+addj][k] = q1[i][j][k];
+                    else if(q == 2)
+                        image[i+addi][j+addj][k] = q2[i][j][k];
+                    else if(q == 3)
+                        image[i+addi][j+addj][k] = q3[i][j][k];
+                    else if(q == 4)
+                        image[i+addi][j+addj][k] = q4[i][j][k];             
+                }
+            }
+        }
+        c++;
+    }
+}
 
 
 void crop(int x,int y , int lenth,int width){
@@ -428,6 +610,57 @@ void skewImageHorizontally(){
 }
 
 
+void skew_image_vertical(int angle)
+{
+
+    float rad_angle;
+    rad_angle = ((float)angle*(22.0/7))/180.0;
+
+    int move;
+    move = 256*tan(rad_angle);
+
+    unsigned char bigimage[SIZE+move][SIZE][3];
+
+    for (int i = 0; i < (SIZE+move); i++)
+    {
+        for (int j = 0; j < SIZE; j++)
+        {
+            for (int k = 0; k < 3; k++)
+            {
+                bigimage[i][j][k] = 255;
+            }
+        }
+        
+    }
+
+    for (int j = 0; j < SIZE; j++)
+    {
+        move = (256 - j)*tan(rad_angle);
+
+        for (int i = 0; i < SIZE; i++)
+        {
+            for (int k = 0; k < 3; k++)
+            {
+                bigimage[i+move][j][k] = image[i][j][k];
+            }
+        }
+    }
+
+    move = 256*tan(rad_angle);
+    
+    for (int i = 0; i < SIZE; i++)
+    {            
+        for (int j = 0; j < SIZE; j++)
+        {
+            for (int k = 0; k < 3; k++)
+            {
+               image[i][j][k] = bigimage[(int)(((256+move)/256.0)*i)][j][k];
+            }
+        }
+        
+    }
+
+}
 
 void showmenu()
 {
@@ -475,7 +708,7 @@ int main()
 
         else if (filterNum == '2')
         {
-            
+            invertImage();
         } 
 
         else if (filterNum == '3')
@@ -497,7 +730,13 @@ int main()
 
         else if (filterNum == '5')
         {
+            int angle = 0;
+
+            cout << "Please select an angle to rotate: ";
+            cout << "\n\n1- 90\n2- 180\n3- 270\n";
             
+            cin >> angle;
+            rotateImage(angle);
         } 
 
         else if (filterNum == '6')
@@ -505,11 +744,18 @@ int main()
             darkenAndLighten();
         } 
 
-        else if (filterNum =='7'){
+        else if (filterNum =='7')
+        {
             detect();
         }
-        else if (filterNum == '8'){
+        else if (filterNum == '8')
+        {
+            int n = 0;
 
+            cout << "Quarter num: \n";
+            cin >> n;
+
+            enlargeimage(n);
         }
         else if (filterNum == '9'){
              shrinkImage();
@@ -521,8 +767,9 @@ int main()
             cin>>n;
             mirror(n);
         }
-        else if (filterNum == 'b'){
-            
+        else if (filterNum == 'b')
+        {
+            shuffleimage();    
         }
         else if (filterNum == 'c'){
             blurImage();
@@ -536,8 +783,12 @@ int main()
         else if (filterNum == 'e'){
             skewImageHorizontally();
         }
-        else if (filterNum == 'f'){
+        else if (filterNum == 'f')
+        {
+            int angle;
+            cin >> angle;
             
+            skew_image_vertical(angle);    
         }
        
         else if (filterNum == 'l')
