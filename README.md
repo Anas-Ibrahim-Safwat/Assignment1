@@ -2,8 +2,10 @@
 <h3><u>Description:</u> </h3> 
 <ul>
   <li>
-    <h2>PhotoEditor.cpp file : </h2>
-    <p> use to edit gray bmp photos.</p>
+    <h2>PhotoEditor.cpp file :  use to edit gray bmp photos.</h2>
+  </li>
+   <li>
+    <h2>PhotoEditorRGB.cpp file :  use to edit RGB bmp photos.</h2>
   </li>
   </ul>
 Philopateer Karam : 20220246 <br>
