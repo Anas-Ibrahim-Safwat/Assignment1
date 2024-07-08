@@ -8,6 +8,15 @@
     <b>PhotoEditorRGB.cpp file :</b>  use to edit RGB bmp photos.
   </li>
   </ul>
-Philopateer Karam : 20220246 <br>
-Mahmoud Khaled : 20220317 <br>
-Anas Ibrahim : 20220068 <br>
+  <h3><u>Made By:</u> </h3> 
+<ul>
+  <li>
+    <b> Anas Ibrahim :</b> 20220068
+  </li>
+   <li>
+    <b> Philopateer Karam :</b> 20220246
+  </li>
+   <li>
+    <b> Mahmoud Khaled :</b> 20220317
+  </li>
+  </ul>
