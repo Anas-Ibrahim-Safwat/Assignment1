@@ -793,7 +793,7 @@ void showmenu()
 
 int main()
 {
-    cout<<"           ________________________ \n          |                        | \n          | RGB photo Editor |\n          |________________________| \n\n";
+    cout<<"           ________________________ \n          |                        | \n          |    RGB photo Editor    |\n          |________________________| \n\n";
 
     loadImage();
 
